@@ -26,7 +26,7 @@ function scoredSorted(){
   const v = loadVotes();
   return COLLECTION
     .map(it => ({ ...it, count: v[it.id] }))
-    .sort((a,b) => b.count - a.count || a.title.localeCompare(b.title));
+    .sort((a,b) => b.count - a.count || Number(a.id) - Number(b.id));
 }
 
 /* ---- placeholder / image helper ---- */
@@ -60,6 +60,7 @@ function tickClock(){
    INDEX PAGE
    ===================================================================== */
 let currentPair = [];
+let usedUrlPair = false;
 
 function pickPair(){
   if (COLLECTION.length < 2) return [];
@@ -69,10 +70,25 @@ function pickPair(){
   return [COLLECTION[a], COLLECTION[b]];
 }
 
+// a shared matchup link can pin a specific pair via ?vs=ID,ID
+function pairFromUrl(){
+  const raw = new URLSearchParams(location.search).get("vs");
+  if(!raw) return null;
+  const [x,y] = raw.split(",").map(s => s.trim());
+  const a = COLLECTION.find(i => i.id === x);
+  const b = COLLECTION.find(i => i.id === y);
+  return (a && b && a !== b) ? [a,b] : null;
+}
+
 function renderVS(){
   const wrap = document.getElementById("vs");
   if(!wrap) return;
-  currentPair = pickPair();
+
+  let fromUrl = null;
+  if(!usedUrlPair){ fromUrl = pairFromUrl(); usedUrlPair = true; }
+  currentPair = fromUrl || pickPair();
+  if(fromUrl) showToast("your friend can't decide — help them pick! 👀");
+
   const [a,b] = currentPair;
   wrap.innerHTML = `
     ${pickCard(a)}
@@ -82,6 +98,7 @@ function renderVS(){
   wrap.querySelectorAll(".pick").forEach(btn=>{
     btn.addEventListener("click", ()=> castVote(btn.dataset.id));
   });
+  renderShare();
 }
 function pickCard(item){
   return `<button class="pick" data-id="${item.id}">
@@ -94,9 +111,39 @@ function pickCard(item){
 function castVote(id){
   addVote(id);
   const item = COLLECTION.find(i=>i.id===id);
-  showToast(`✓ голос за "${item.title}"`);
+  showToast(`✓ voted for "${item.title}"`);
   renderBoard();
   renderVS();
+}
+
+/* ---- share this matchup ("help me pick") ---- */
+function matchupUrl(){
+  const [a,b] = currentPair;
+  return `${location.origin}${location.pathname}?vs=${a.id},${b.id}`;
+}
+function shareMatchup(){
+  const [a,b] = currentPair;
+  const text = "i can't decide which one is cooler... this one or that one?? 👀 come help me pick 👉👈";
+  const url = matchupUrl();
+  const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+  window.open(intent, "_blank", "noopener");
+}
+async function copyMatchup(){
+  try{
+    await navigator.clipboard.writeText(matchupUrl());
+    showToast("link copied ✓ send it to a friend");
+  }catch(e){
+    showToast(matchupUrl());
+  }
+}
+function renderShare(){
+  const bar = document.getElementById("sharebar");
+  if(!bar) return;
+  bar.innerHTML = `
+    <span class="share-q">can't decide? get a friend:</span>
+    <button class="share x" onclick="shareMatchup()">🐦 help me pick — tweet it</button>
+    <button class="share" onclick="copyMatchup()">🔗 copy link</button>
+  `;
 }
 
 let toastTimer;
@@ -135,7 +182,7 @@ function renderBoard(){
 /* =====================================================================
    COUNTDOWN PAGE (MTV TRL)
    ===================================================================== */
-const COUNTDOWN_TOP = 100; // показываем верхушку чарта, а не все 2000
+const COUNTDOWN_TOP = 100; // show the top of the chart, not all 2000
 
 function renderCountdown(){
   const body = document.getElementById("trl-body");

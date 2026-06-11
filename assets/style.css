@@ -222,6 +222,29 @@ a{ color:inherit; }
   transform:rotate(-8deg);
 }
 
+/* share this matchup ("help me pick") */
+.sharebar{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px;
+  margin-top:18px;
+}
+.sharebar .share-q{
+  width:100%; text-align:center; font-family:"Special Elite",serif;
+  font-size:12px; color:var(--ink); margin-bottom:2px;
+}
+.share{
+  font-family:"Silkscreen",sans-serif; font-size:10px; color:var(--ink);
+  background:#fff; border:2px solid var(--ink); border-radius:6px;
+  padding:7px 13px; box-shadow:2px 2px 0 var(--ink); cursor:inherit;
+}
+.share:hover{ background:var(--sun); }
+.share:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--ink); }
+.share.x{ background:var(--cool); }
+.share.x:hover{ background:var(--hot); color:#fff; }
+
+.btn-row{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+.bigbtn.alt{ background:var(--cool); }
+.bigbtn.alt:hover{ background:var(--hot); color:#fff; }
+
 .vote-foot{ text-align:center; margin-top:16px; font-size:10px; opacity:.7; }
 .vote-foot .skip{
   background:var(--win-face); border:2px solid var(--ink); border-radius:5px;
