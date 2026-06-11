@@ -1,0 +1,10 @@
+# Cloudflare Pages config — binds the D1 database to Functions.
+# Read automatically by the Git-connected Pages project on each deploy.
+name = "cooliguesscrew"
+pages_build_output_dir = "."
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"            # functions read env.DB
+database_name = "cigc"
+database_id = "53e0faef-fc00-45b2-909a-808b8c2df5fa"
