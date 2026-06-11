@@ -54,9 +54,10 @@ function scoredSorted(){
 }
 
 /* ---- placeholder / image helper ---- */
-function picMarkup(item, cls){
+function picMarkup(item, cls, eager){
   if (item.src){
-    return `<img src="${item.src}" alt="${item.title}" loading="lazy" decoding="async">`;
+    const load = eager ? `loading="eager" fetchpriority="high"` : `loading="lazy"`;
+    return `<img src="${item.src}" alt="${item.title}" ${load} decoding="async">`;
   }
   // fallback if an image is ever missing
   const tint = item.tint || "#d9d3e8";
@@ -85,6 +86,7 @@ function tickClock(){
    ===================================================================== */
 let currentPair = [];
 let usedUrlPair = false;
+let nextPairBuf = null;     // pre-picked + preloaded next matchup
 
 function pickPair(){
   if (COLLECTION.length < 2) return [];
@@ -92,6 +94,15 @@ function pickPair(){
   let b = a;
   while (b === a) b = Math.floor(Math.random()*COLLECTION.length);
   return [COLLECTION[a], COLLECTION[b]];
+}
+
+// warm the browser cache so the next pair appears instantly
+function preloadPair(pair){
+  (pair || []).forEach(it => { if(it.src){ const im = new Image(); im.src = it.src; } });
+}
+function takePair(){
+  if(nextPairBuf){ const p = nextPairBuf; nextPairBuf = null; return p; }
+  return pickPair();
 }
 
 // a shared matchup link can pin a specific pair via ?vs=ID,ID
@@ -110,7 +121,7 @@ function renderVS(){
 
   let fromUrl = null;
   if(!usedUrlPair){ fromUrl = pairFromUrl(); usedUrlPair = true; }
-  currentPair = fromUrl || pickPair();
+  currentPair = fromUrl || takePair();
   if(fromUrl) showToast("your friend can't decide — help them pick! 👀");
 
   const [a,b] = currentPair;
@@ -123,10 +134,14 @@ function renderVS(){
     btn.addEventListener("click", ()=> castVote(btn.dataset.id));
   });
   renderShare();
+
+  // prepare + preload the next matchup so the next click is instant
+  nextPairBuf = pickPair();
+  preloadPair(nextPairBuf);
 }
 function pickCard(item){
   return `<button class="pick" data-id="${item.id}">
-            <div class="frame">${picMarkup(item)}</div>
+            <div class="frame">${picMarkup(item, null, true)}</div>
             <div class="label">${item.title}</div>
             <div class="pickbtn">pick me!</div>
           </button>`;
