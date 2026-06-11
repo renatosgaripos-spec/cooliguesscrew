@@ -1,18 +1,42 @@
 /* =====================================================================
    COOL I GUESS CREW — app logic
-   - voting (localStorage, works on GitHub Pages with no backend)
+   - voting: shared via Cloudflare D1 (/api/*) when available,
+     otherwise falls back to localStorage (local preview / pre-setup)
    - leaderboard + MTV TRL countdown
    ===================================================================== */
 
 const LS_KEY = "cigc_votes_v1";
 const LS_SEEN = "cigc_lastrank_v1";
 
-/* ---- vote storage ---- */
+/* ---- remote (shared) vote state ---- */
+let REMOTE = false;          // true once /api/scores responds "configured"
+let remoteScores = {};       // id -> count, from the server
+
+async function fetchScores(){
+  try{
+    const r = await fetch("/api/scores?top=300", { headers:{ accept:"application/json" } });
+    if(!r.ok) throw 0;
+    const data = await r.json();
+    if(!data || !data.configured) throw 0;
+    REMOTE = true;
+    remoteScores = {};
+    (data.scores || []).forEach(s => { remoteScores[String(s.id)] = s.count; });
+    return true;
+  }catch(e){
+    REMOTE = false;
+    return false;
+  }
+}
+
+/* ---- vote storage (remote-first, localStorage fallback) ---- */
 function loadVotes(){
+  const out = {};
+  if(REMOTE){
+    COLLECTION.forEach(it => { out[it.id] = remoteScores[it.id] || 0; });
+    return out;
+  }
   let stored = {};
   try { stored = JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch(e){}
-  // merge baseline votes from data.js with stored deltas
-  const out = {};
   COLLECTION.forEach(it => { out[it.id] = (it.votes||0) + (stored[it.id]||0); });
   return out;
 }
@@ -108,9 +132,35 @@ function pickCard(item){
           </button>`;
 }
 
-function castVote(id){
-  addVote(id);
+async function castVote(id){
+  const [a,b] = currentPair;
+  const loser = (a && b) ? (a.id === id ? b.id : a.id) : null;
   const item = COLLECTION.find(i=>i.id===id);
+
+  if(REMOTE){
+    // optimistic update, then confirm with the server
+    remoteScores[id] = (remoteScores[id] || 0) + 1;
+    showToast(`✓ voted for "${item.title}"`);
+    renderBoard();
+    renderVS();
+    try{
+      const r = await fetch("/api/vote", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-cigc-vote": "1" },
+        body: JSON.stringify({ winner: id, loser })
+      });
+      if(r.ok){
+        const d = await r.json();
+        if(typeof d.count === "number"){ remoteScores[id] = d.count; renderBoard(); }
+      }else if(r.status === 429){
+        showToast("whoa, slow down a sec 💤");
+      }
+    }catch(e){ /* keep the optimistic count */ }
+    return;
+  }
+
+  // local fallback
+  addVote(id);
   showToast(`✓ voted for "${item.title}"`);
   renderBoard();
   renderVS();
@@ -219,9 +269,20 @@ function renderCountdown(){
 }
 
 /* ---- boot ---- */
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", async ()=>{
   tickClock(); setInterval(tickClock, 10000);
+
+  await fetchScores();   // shared votes if the API is live, else localStorage
   renderVS();
   renderBoard();
   renderCountdown();
+
+  // keep the shared top fresh so everyone sees the same ranking
+  if(REMOTE){
+    setInterval(async ()=>{
+      await fetchScores();
+      renderBoard();
+      renderCountdown();
+    }, 25000);
+  }
 });
