@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cool I Guess Crew ★ welcome 2 my room</title>
+<meta name="description" content="Cool I Guess Crew — a collection. vote who's cooler.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Silkscreen:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>💿</text></svg>">
+</head>
+<body>
+
+  <!-- ===== MENU BAR ===== -->
+  <div class="menubar">
+    <span class="apple"></span>
+    <span class="mitem">File</span>
+    <span class="mitem">Edit</span>
+    <span class="mitem">View</span>
+    <span class="mitem">Special</span>
+    <div class="marquee-wrap"><span>♥ welcome 2 my room... don't touch anything ♥ ✿ Cool I Guess Crew ✿ now playing: nothing but a vibe ♪ ✶ vote 4 ur fave ✶ &nbsp;&nbsp;&nbsp;</span></div>
+    <span class="clock" id="clock">9:45 PM</span>
+  </div>
+
+  <!-- ===== DESKTOP ICONS ===== -->
+  <nav class="desk-icons">
+    <a class="desk-icon" href="countdown.html">
+      <div class="glyph">📺</div><span>the countdown</span>
+    </a>
+    <a class="desk-icon" href="#topofcool">
+      <div class="glyph">💖</div><span>top of cool</span>
+    </a>
+    <a class="desk-icon" href="https://github.com/renatosgaripos-spec/cooliguesscrew" target="_blank" rel="noopener">
+      <div class="glyph">💾</div><span>read me</span>
+    </a>
+  </nav>
+
+  <!-- ===== STICKY NOTES ===== -->
+  <div class="sticky pink s1">
+    <b>note 2 self:</b><br>pick the cool ones.<br>trust ur gut !!
+  </div>
+  <div class="sticky s2">
+    <b>todo:</b><br>♡ burn a cd<br>♡ vote<br>♡ stay cool i guess
+  </div>
+
+  <!-- ===== DESKTOP ===== -->
+  <main class="desktop">
+
+    <!-- MAIN WINDOW: name + voting -->
+    <section class="window wide">
+      <div class="titlebar">
+        <span class="dot"></span>
+        <span class="title">★ Cool I Guess Crew ★</span>
+        <span class="strut"></span>
+      </div>
+      <div class="content">
+
+        <div class="hero">
+          <h1 class="crew">cool i guess<br><span class="star">★</span> crew <span class="star">★</span></h1>
+          <span class="tag">a collection of 2000 · est. whenever · vol. 1</span>
+          <p class="sub">you opened my computer by accident. it's fine. help me decide which ones are actually cool — click the cooler one.</p>
+        </div>
+
+        <div class="vote-head">WHO'S COOLER? <b>you decide.</b></div>
+        <div class="vs" id="vs"><!-- filled by app.js --></div>
+
+        <div class="vote-foot">
+          <button class="skip" onclick="renderVS()">↻ show me 2 others</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LEADERBOARD WINDOW -->
+    <section class="window" id="topofcool">
+      <div class="titlebar">
+        <span class="dot"></span>
+        <span class="title">★ TOP OF THE COOL ★</span>
+        <span class="strut"></span>
+      </div>
+      <div class="content">
+        <ul class="board" id="board"><!-- filled by app.js --></ul>
+        <div class="center mt">
+          <a class="bigbtn" href="countdown.html">▶ see the full countdown</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="credit">made in a bedroom · cool i guess crew © forever</div>
+  </main>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
