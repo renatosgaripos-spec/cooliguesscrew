@@ -356,16 +356,13 @@ a{ color:inherit; }
 
 /* ===================== MOBILE ===================== */
 @media (max-width:560px){
-  /* keep desktop icons clear of the fixed menu bar */
+  /* no Mac menu bar on phones — drop it entirely */
+  .menubar{ display:none; }
   .desktop{ padding:14px 12px 70px; }
   .desk-icons{
     position:static; flex-direction:row; flex-wrap:wrap; justify-content:center;
-    gap:14px; margin:34px 0 4px;
+    gap:14px; margin:6px 0 4px;
   }
-  /* tighten the menu bar so the marquee never crowds the clock */
-  .menubar{ font-size:10px; padding:0 6px; }
-  .menubar .mitem{ padding:3px 5px; }
-  .menubar .marquee-wrap{ margin:0 6px; }
   .sticky.s1{ top:auto; position:static; margin:0 auto 4px; transform:rotate(2deg); }
   .sticky.s2{ display:none; }
   .vs{ grid-template-columns:1fr; }
@@ -376,9 +373,4 @@ a{ color:inherit; }
   .row{ grid-template-columns:28px 34px 1fr auto; }
   .crow{ grid-template-columns:44px 44px 1fr; }
   .crow .move{ display:none; }
-}
-
-/* very narrow phones: drop the menu words, keep apple + marquee + clock */
-@media (max-width:380px){
-  .menubar .mitem{ display:none; }
 }
