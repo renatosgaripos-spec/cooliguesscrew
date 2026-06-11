@@ -137,14 +137,14 @@ a{ color:inherit; }
 }
 .titlebar .strut{ width:14px; height:14px; }
 
-.window .content{ padding:18px 20px 22px; }
+.window .content{ padding:14px 20px 16px; }
 
 /* ===================== HERO / NAME ===================== */
-.hero{ text-align:center; padding:6px 0 2px; }
+.hero{ text-align:center; padding:2px 0 0; }
 .hero .crew{
   font-family:"Jua", sans-serif;
-  font-size:clamp(34px, 7vw, 64px);
-  line-height:.95;
+  font-size:clamp(28px, 5.4vw, 50px);
+  line-height:.92;
   margin:0;
   color:var(--hot);
   text-shadow:
@@ -155,16 +155,16 @@ a{ color:inherit; }
 }
 .hero .crew .star{ color:var(--sun); -webkit-text-stroke:1px var(--ink); }
 .hero .tag{
-  display:inline-block; margin-top:10px; font-size:10px;
+  display:inline-block; margin-top:8px; font-size:10px;
   background:var(--sun); color:var(--ink);
   padding:4px 10px; border:2px solid var(--ink); border-radius:20px;
   box-shadow:2px 2px 0 var(--ink); transform:rotate(1.5deg);
 }
-.hero .sub{ font-family:"Special Elite", serif; font-size:12px; margin:14px auto 0; max-width:46ch; color:var(--ink); opacity:.85; }
+.hero .sub{ font-family:"Special Elite", serif; font-size:11px; margin:9px auto 0; max-width:48ch; color:var(--ink); opacity:.85; }
 
 /* ===================== VOTING / VS ===================== */
 .vote-head{
-  text-align:center; margin:22px 0 14px; font-size:15px; letter-spacing:1px;
+  text-align:center; margin:14px 0 10px; font-size:14px; letter-spacing:1px;
   color:var(--ink);
 }
 .vote-head b{ color:var(--hot-2); }
@@ -176,14 +176,14 @@ a{ color:inherit; }
 }
 .pick{
   border:none; background:none; padding:0; cursor:inherit;
-  display:flex; flex-direction:column; align-items:center; gap:8px;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
   transition:transform .08s;
 }
 .pick:hover{ transform:translateY(-4px) rotate(-1deg); }
 .pick:active{ transform:scale(.97); }
 
 .frame{
-  width:100%; aspect-ratio:1/1; max-width:240px;
+  width:100%; aspect-ratio:1/1; max-width:208px;
   border:3px solid var(--ink);
   background:#fff;
   box-shadow:5px 5px 0 var(--win-shadow);
@@ -225,7 +225,7 @@ a{ color:inherit; }
 /* share this matchup ("help me pick") */
 .sharebar{
   display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px;
-  margin-top:18px;
+  margin-top:12px;
 }
 .sharebar .share-q{
   width:100%; text-align:center; font-family:"Special Elite",serif;
@@ -245,7 +245,7 @@ a{ color:inherit; }
 .bigbtn.alt{ background:var(--cool); }
 .bigbtn.alt:hover{ background:var(--hot); color:#fff; }
 
-.vote-foot{ text-align:center; margin-top:16px; font-size:10px; opacity:.7; }
+.vote-foot{ text-align:center; margin-top:10px; font-size:10px; opacity:.7; }
 .vote-foot .skip{
   background:var(--win-face); border:2px solid var(--ink); border-radius:5px;
   padding:4px 12px; font-family:"Silkscreen",sans-serif; font-size:9px;
@@ -356,13 +356,29 @@ a{ color:inherit; }
 
 /* ===================== MOBILE ===================== */
 @media (max-width:560px){
-  .desk-icons{ position:static; flex-direction:row; flex-wrap:wrap; justify-content:center; margin-bottom:6px; }
-  .sticky.s1{ top:auto; position:static; margin:0 auto; transform:rotate(2deg); }
+  /* keep desktop icons clear of the fixed menu bar */
+  .desktop{ padding:14px 12px 70px; }
+  .desk-icons{
+    position:static; flex-direction:row; flex-wrap:wrap; justify-content:center;
+    gap:14px; margin:34px 0 4px;
+  }
+  /* tighten the menu bar so the marquee never crowds the clock */
+  .menubar{ font-size:10px; padding:0 6px; }
+  .menubar .mitem{ padding:3px 5px; }
+  .menubar .marquee-wrap{ margin:0 6px; }
+  .sticky.s1{ top:auto; position:static; margin:0 auto 4px; transform:rotate(2deg); }
   .sticky.s2{ display:none; }
   .vs{ grid-template-columns:1fr; }
   .vs-bolt{ margin:2px auto; }
-  .frame{ max-width:200px; }
+  .frame{ max-width:220px; }
+  .sharebar .share{ flex:1 1 auto; text-align:center; }
+  .btn-row{ flex-direction:column; align-items:stretch; }
   .row{ grid-template-columns:28px 34px 1fr auto; }
   .crow{ grid-template-columns:44px 44px 1fr; }
   .crow .move{ display:none; }
+}
+
+/* very narrow phones: drop the menu words, keep apple + marquee + clock */
+@media (max-width:380px){
+  .menubar .mitem{ display:none; }
 }
