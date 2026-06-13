@@ -3,7 +3,6 @@
 name = "cooliguesscrew"
 pages_build_output_dir = "."
 compatibility_date = "2025-01-01"
-compatibility_flags = ["nodejs_compat"]
 
 [[d1_databases]]
 binding = "DB"            # functions read env.DB
