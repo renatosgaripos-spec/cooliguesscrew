@@ -10,3 +10,7 @@ Cool I Guess Crew/
 
 # локальный конфиг превью
 .claude/
+
+# npm (Cloudflare installs deps on deploy from package-lock)
+node_modules/
+.wrangler/
