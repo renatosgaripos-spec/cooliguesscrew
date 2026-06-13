@@ -160,7 +160,7 @@ a{ color:inherit; }
   padding:4px 10px; border:2px solid var(--ink); border-radius:20px;
   box-shadow:2px 2px 0 var(--ink); transform:rotate(1.5deg);
 }
-.hero .sub{ font-family:"Special Elite", serif; font-size:11px; margin:9px auto 0; max-width:48ch; color:var(--ink); opacity:.85; }
+.hero .sub{ font-family:"Special Elite", serif; font-size:13px; margin:10px auto 0; max-width:48ch; color:var(--ink); opacity:1; }
 
 /* ===================== VOTING / VS ===================== */
 .vote-head{
